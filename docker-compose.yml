@@ -1,0 +1,83 @@
+# ==============================================================================
+# CARA — Docker Compose for Local Multi-Container Development
+#
+# Services:
+#   1. backend  — FastAPI app (uvicorn) on port 8000
+#   2. frontend — Streamlit UI on port 8501
+#
+# Usage:
+#   docker compose up --build       # Build & start both services
+#   docker compose up -d            # Detached mode
+#   docker compose logs -f backend  # Tail backend logs
+#   docker compose down             # Stop & remove containers
+#
+# Notes:
+#   - Copy .env.example → .env and fill in API keys before starting.
+#   - The Streamlit frontend connects to the backend via CARA_BACKEND_URL.
+#   - Data volumes persist research cache and documents across restarts.
+# ==============================================================================
+
+services:
+  # ── FastAPI Backend ──────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cara-backend
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8000}:8000"
+    env_file:
+      - .env
+    environment:
+      - ENVIRONMENT=production
+      - HOST=0.0.0.0
+      - PORT=8000
+    volumes:
+      - cara-data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      start-period: 10s
+      retries: 3
+    # Resource limits to prevent runaway LLM processing
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: "1.0"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+
+  # ── Streamlit Frontend ───────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cara-frontend
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    environment:
+      - CARA_BACKEND_URL=http://backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    # Override entrypoint to run Streamlit instead of uvicorn
+    command: ["streamlit", "run", "frontend/streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0", "--server.headless=true"]
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.5"
+        reservations:
+          memory: 128M
+          cpus: "0.1"
+
+volumes:
+  cara-data:
+    driver: local

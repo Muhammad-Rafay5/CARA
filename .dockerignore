@@ -1,0 +1,71 @@
+# =============================================================================
+# CARA — Docker Build Context Exclusions
+# =============================================================================
+
+# Version Control
+.git
+.gitignore
+
+# Python Environments & Caches
+.venv/
+venv/
+ENV/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# Secrets & Environment Files
+.env
+.env.*
+!.env.example
+
+# Testing (not needed in production image)
+tests/
+htmlcov/
+coverage.xml
+.coverage
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-*
+
+# Documentation & Development
+*.md
+!README.md
+docs/
+deployment/
+scripts/
+Master Project Context*.md
+
+# Data & Local Artifacts
+data/cache/*
+data/documents/*
+data/evaluations/*
+*.db
+*.sqlite3
+
+# OS Artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Agents & AI Tooling
+.agents/
+.gemini/
+
+# Logs
+logs/
+*.log

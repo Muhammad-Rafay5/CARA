@@ -1,0 +1,52 @@
+# Python & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# Testing & Coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# IDEs & Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Project Data & Cache
+data/cache/*
+!data/cache/.gitkeep
+data/documents/*
+!data/documents/.gitkeep
+data/evaluations/*
+!data/evaluations/.gitkeep
+*.db
+*.sqlite3
+
+# Docker & OS
+.ds_store
+Thumbs.db
+
+.env.*
+!.env.example
+graphify-out/
+*.egg-info/
+
+# Internal docs & tooling (not pushed)
+SETUP_AND_DEPLOYMENT.md
+Master Project Context*.md
+deployment/
+.agents/
+.code-review-graph/

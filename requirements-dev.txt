@@ -1,0 +1,8 @@
+# Testing Framework
+pytest>=8.3.0
+pytest-asyncio>=0.24.0
+pytest-cov>=5.0.0
+
+# Code Quality & Static Analysis
+mypy>=1.11.0
+ruff>=0.6.0
